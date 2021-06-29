@@ -1,5 +1,5 @@
-#ifndef _CONVERTandTOOLS_H
-#define _CONVERTandTOOLS_H
+#pragma once
+
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -8,7 +8,6 @@
 #include <math.h>
 
 #include "include/titypes.h"
-#include "include/tistring.h"
 
 /* A utility function to reverse a string */
 void reverse(char *buffer, uint16_t length)
@@ -33,7 +32,7 @@ int32_t itoa_32(char** buffer,int32_t num, uint8_t base,uint16_t rdecimal)
 	{
 		(*buffer)[i++] = '0';
 		(*buffer)[i] = '\0';
-        return;
+        return 0;
 	}
 
 	if (num < 0 && base == 10)
@@ -50,11 +49,15 @@ int32_t itoa_32(char** buffer,int32_t num, uint8_t base,uint16_t rdecimal)
 	}
 
     while(i < rdecimal)
+    {
         (*buffer)[i++] = '0';
+    }
 
-	if (negative == true)
+	if(negative == true)
+    {
 		(*buffer)[i++] = '-';
-	(*buffer)[i] = '\0'; 
+    }
+    (*buffer)[i] = '\0'; 
 	reverse(*buffer, i);
 
     return i;
@@ -123,6 +126,3 @@ char* ftoa_32(char* buffer,float num)
     return buffer;
 }
 
-
-
-#endif

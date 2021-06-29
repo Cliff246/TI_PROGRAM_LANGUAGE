@@ -1,8 +1,5 @@
-#ifndef _TISTRING_H
-#define _TISTRING_H
+#pragma once
 
 #include <stdint.h>
 #include <stdlib.h>
 
-
-#endif

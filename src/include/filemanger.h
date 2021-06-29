@@ -1,5 +1,4 @@
-#ifndef _FILEMANGER_H
-#define _FILEMANGER_H
+#pragma once
 
 #include <tice.h>
 #include <fileioc.h>
@@ -46,6 +45,7 @@ ti_file_t* ti_open_file(char* file_name,char* file_mode)
         return file_object;
     }
     os_ThrowError(-1);
+    return NULL;
 }
 
 char* pull_file(ti_file_t* file)
@@ -151,4 +151,3 @@ void close_file(ti_file_t* file)
         os_ThrowError(-1);
 }
 
-#endif

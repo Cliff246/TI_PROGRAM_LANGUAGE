@@ -1,5 +1,4 @@
-#ifndef _MEMORY_H
-#define _MEMORY_H
+#pragma once
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -20,6 +19,5 @@ void* allocate_more(void* rptr,int24_t size)
         }
     }
     os_ThrowError(-1);
+    return NULL;
 }
-
-#endif e

@@ -1,5 +1,4 @@
-#ifndef _CONSOLEIO_H
-#define _CONSOLEIO_H
+#pragma once
 
 #include <tice.h>
 #include <stdint.h>
@@ -8,7 +7,6 @@
 
 
 #include "include/filemanger.h"
-#include "include/tistring.h"
 #include "include/memory.h"
 #include "include/convert&tools.h"
 
@@ -17,8 +15,12 @@ void ti_get_in_d(char* data)
     uint16_t i = 0;
     if(data == NULL)
         return;
-    for(char get_csc = os_GetCSC();get_csc != sk_Enter;i++)
-       data[i] = get_csc;
+    for(char get_csc = os_GetCSC();;i++)
+    {
+        if(get_csc == sk_Enter)
+            return;
+        data[i] = get_csc;
+    }
     return;
 }
 
@@ -53,14 +55,14 @@ char* ti_get_in_s()
     return buffer;
 }
 
-void ti_out_pf(uint16_t size,char* frmt,...)
+void ti_out_pf(char* frmt,...)
 {
     if(frmt == NULL)
         return;
     char *string= (char*)malloc(1);
     int24_t svalue,buffer_size;
     uint24_t uvalue;
-    float fvalue;
+    double fvalue;
 
     va_list va;
     va_start(va,frmt);
@@ -109,7 +111,7 @@ void ti_out_pf(uint16_t size,char* frmt,...)
                             os_ThrowError(-1);
                         break;  
                     case 'f':
-                        fvalue = va_arg(va,float);
+                        fvalue = va_arg(va,double);
                         buffer = ftoa_32(buffer,fvalue);
                         buffer_size = strlen(buffer);
                         string = (char*)allocate_more(string,i + buffer_size);
@@ -131,4 +133,3 @@ void ti_out_pf(uint16_t size,char* frmt,...)
     os_PutStrFull(string);
 }
 
-#endif

@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#include "include/filemanger.h"
 #include "include/memory.h"
 #include "include/convert&tools.h"
 
@@ -66,13 +65,14 @@ void ti_print_out_s(char* frmt,...)
     va_list va;
     va_start(va,frmt);
 
+    int24_t string_size = 1;
+
     for(uint16_t i = 0; ;i++)
     {
-        char current = frmt[i];
 
         if(frmt[i] == '\0')
         {
-            string = (char*)allocate_more(string,i+1);
+            string = (char*)allocate_more(string,string_size+1);
             string[i+1] = 0;
             break;
         }
@@ -88,7 +88,8 @@ void ti_print_out_s(char* frmt,...)
                         svalue = va_arg(va,int24_t);
                         itoa_32(&buffer,(int32_t)svalue,10,0);
                         buffer_size = strlen(buffer);
-                        string = (char*)allocate_more(string,i + buffer_size);
+                        string = (char*)allocate_more(string,string_size + buffer_size);
+                        string_size += buffer_size;
                         if(memcpy(string + i,buffer,buffer_size) == NULL)
                             os_ThrowError(-1);
                         break;
@@ -96,7 +97,8 @@ void ti_print_out_s(char* frmt,...)
                         free(buffer);
                         buffer = va_arg(va,char*);
                         buffer_size = strlen(buffer);
-                        string = (char*)allocate_more(string,i + buffer_size);
+                        string = (char*)allocate_more(string,string_size + buffer_size);
+                        string_size += buffer_size;
                         if(memcpy(string + i,buffer,buffer_size) == NULL)
                             os_ThrowError(-1);
 
@@ -105,7 +107,8 @@ void ti_print_out_s(char* frmt,...)
                         uvalue = va_arg(va,uint24_t);
                         itoa_32(&buffer,(uint32_t)uvalue,10,0);
                         buffer_size = strlen(buffer);
-                        string = (char*)allocate_more(string,i + buffer_size);
+                        string = (char*)allocate_more(string,string_size + buffer_size);
+                        string_size += buffer_size;
                         if(memcpy(string + i,buffer,buffer_size) == NULL)
                             os_ThrowError(-1);
                         break;  
@@ -113,7 +116,8 @@ void ti_print_out_s(char* frmt,...)
                         fvalue = va_arg(va,double);
                         buffer = ftoa_32(buffer,fvalue);
                         buffer_size = strlen(buffer);
-                        string = (char*)allocate_more(string,i + buffer_size);
+                        string = (char*)allocate_more(string,string_size + buffer_size);
+                        string_size += buffer_size;
                         if(memcpy(string + i,buffer,buffer_size) == NULL)
                             os_ThrowError(-1);
                         break;
@@ -123,8 +127,9 @@ void ti_print_out_s(char* frmt,...)
             }
             else
             {
-                allocate_more(string,i+1);
-                string[i] = current;
+                allocate_more(string,string_size+1);
+                string[i] = frmt[i];
+                string_size++;
             }
         }
     }

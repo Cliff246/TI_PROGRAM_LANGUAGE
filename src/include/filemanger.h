@@ -22,7 +22,6 @@ struct ti_file
 
 ti_file_t* ti_open_file(char* file_name,char* file_mode) 
 {
-
     //custom wrapper for open file 
     if(file_name == NULL || file_mode == NULL)
         return 0;
@@ -50,41 +49,86 @@ ti_file_t* ti_open_file(char* file_name,char* file_mode)
 
 char* pull_file(ti_file_t* file)
 {
+    //free after words
+   
     //pull data from file
     if(file != NULL)
     {   
-        if(file->ti_var_file != 0)
+        /*goto is dangerous but quote this if i am wrong.
+         every thing that could is in the scope of the goto is on the stack so it should be fine? 
+         even if it did cause a memory leak then who cares its only a few bytes :)*/
+        file_reset:
+        char* pmodes[] = {"r","r+","w+","a+"};
+        if(compare_strings(file->ti_mode,pmodes,4) == 0)
         {
-            /*goto is dangerous but quote this if i am wrong.
-             every thing that could is in the scope of the goto is on the stack so it should be fine? 
-             even if it did cause a memory leak then who cares its only a few bytes :)*/
-            file_reset:
-            if(strcmp(file->ti_mode,"r") == 0 || strcmp(file->ti_mode,"r+") == 0|| strcmp(file->ti_mode,"w+") == 0 || strcmp(file->ti_mode,"a+") == 0)
+            uint16_t isize = ti_GetSize(file->ti_var_file);
+            char* data = (char*)malloc(isize);
+            if(data == NULL || file->ti_var_file == 0)
+                os_ThrowError(-1);
+            else
             {
-                uint16_t isize = ti_GetSize(file->ti_var_file);
-
-                char* data = (char*)malloc(isize);
-                if(data == NULL)
+                size_t rsize = ti_Read(data,CHUNKSIZE,isize,file->ti_var_file);
+                if(rsize == isize)
+                    return data;
+                else
+                    os_ThrowError(-1);
+            }
+        }
+        else
+        {
+            ti_Close(file->ti_var_file);
+            ti_var_t reset = ti_Open(file->ti_file_name,"r+");
+            if(reset == 0)
+                os_ThrowError(-1);
+            else
+            {
+                void* copy = strcpy(file->ti_mode,"r+");
+                if(copy == NULL)
                     os_ThrowError(-1);
                 else
                 {
-                    size_t rsize = ti_Read(data,CHUNKSIZE,isize,file->ti_var_file);
-                    if(rsize == isize)
-                    {
-                        return data;
-                    }
-                    else
-                        os_ThrowError(-1);
+                    file->ti_var_file = reset;
+                    //super scary
+                    goto file_reset;
                 }
             }
+        }
+    }
+    os_ThrowError(-1);
+    return NULL;
+}
+
+void write_file(ti_file_t *file,char* data)
+{
+    if(file == NULL || data == NULL)
+        os_ThrowError(-1);
+    else
+    {
+        file_reset:
+        char *pmode[] = {"w","a","r+","w+","a+"};
+        if(compare_strings(file->ti_mode,pmode,5) == 0)
+        {
+            uint16_t isize = ti_GetSize(file->ti_var_file);
+            if(file->ti_var_file == 0)
+                os_ThrowError(-1);
             else
             {
-                ti_var_t reset = ti_Open(file->ti_file_name,"r+");
+                uint16_t rsize = ti_Write(data,CHUNKSIZE,isize,file->ti_var_file);
+                if(rsize == isize)
+                    return;
+                else
+                    os_ThrowError(-1);
+            }
+        }
+        else
+        {
+            ti_Close(file->ti_var_file);
+            ti_var_t reset = ti_Open(file->ti_file_name,"w+");
                 if(reset == 0)
                     os_ThrowError(-1);
                 else
                 {
-                    void* copy = memcpy(file->ti_mode,"r+",3);
+                    void* copy = strcpy(file->ti_mode,"w+");
                     if(copy == NULL)
                         os_ThrowError(-1);
                     else
@@ -94,11 +138,9 @@ char* pull_file(ti_file_t* file)
                         goto file_reset;
                     }
                 }
-            }
         }
     }
-    os_ThrowError(-1);
-    return NULL;
+
 }
 
 void create_file(ti_file_t **rfile,char* name,char* data)
@@ -151,3 +193,17 @@ void close_file(ti_file_t* file)
         os_ThrowError(-1);
 }
 
+ti_file_t* new_file(char* name,char* data)
+{
+    if(name == NULL || data == NULL)
+        return NULL;
+
+    ti_file_t* file = (ti_file_t*)malloc(sizeof(ti_file_t)); 
+    if(file != NULL)
+    {
+        create_file(&file,name,data);
+        return file;
+    }
+    os_ThrowError(-1);
+    return NULL;
+}

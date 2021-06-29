@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -8,6 +7,7 @@
 #include <math.h>
 
 #include "include/titypes.h"
+
 
 /* A utility function to reverse a string */
 void reverse(char *buffer, uint16_t length)
@@ -21,7 +21,6 @@ void reverse(char *buffer, uint16_t length)
         buffer[end] = temp;
     }
 }
-
 
 // Implementation of itoa()
 int32_t itoa_32(char** buffer,int32_t num, uint8_t base,uint16_t rdecimal)

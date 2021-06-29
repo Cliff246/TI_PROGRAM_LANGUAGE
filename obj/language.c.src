@@ -819,8 +819,8 @@ BB7_15:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
-	public	_ti_get_in_d
-_ti_get_in_d:
+	public	_ti_read_in_d
+_ti_read_in_d:
 	call	__frameset0
 	ld	hl, (ix + 6)
 	add	hl, bc
@@ -848,8 +848,8 @@ BB8_3:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
-	public	_ti_get_in_s
-_ti_get_in_s:
+	public	_ti_raed_in_s
+_ti_raed_in_s:
 	ld	hl, -10
 	call	__frameset
 	ld	hl, 1
@@ -934,8 +934,8 @@ BB9_10:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
-	public	_ti_out_pf
-_ti_out_pf:
+	public	_ti_print_out_s
+_ti_print_out_s:
 	ld	hl, -23
 	call	__frameset
 	ld	hl, (ix + 6)
@@ -1188,8 +1188,26 @@ BB10_20:
 	section	.text,"ax",@progbits
 	public	_main
 _main:
+	ld	hl, -3
+	call	__frameset
+	ld	hl, 4
+	push	hl
+	call	_malloc
+	pop	de
+	ld	(ix + -3), hl
+	ld	hl, L_.str.5
+	push	hl
+	ld	hl, L_.str.6
+	push	hl
+	pea	ix + -3
+	call	_create_file
+	pop	hl
+	pop	hl
+	pop	hl
 	or	a, a
 	sbc	hl, hl
+	ld	sp, ix
+	pop	ix
 	ret
 	section	.text,"ax",@progbits
 
@@ -1217,6 +1235,16 @@ L_.str.3:
 	private	L_.str.4
 L_.str.4:
 	db	"w",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.5
+L_.str.5:
+	db	"what",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.6
+L_.str.6:
+	db	"hello",000o
 
 	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
 	extern	__ldivs

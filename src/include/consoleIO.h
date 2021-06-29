@@ -5,12 +5,11 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-
 #include "include/filemanger.h"
 #include "include/memory.h"
 #include "include/convert&tools.h"
 
-void ti_get_in_d(char* data)
+void ti_read_in_d(char* data)
 {
     uint16_t i = 0;
     if(data == NULL)
@@ -24,7 +23,7 @@ void ti_get_in_d(char* data)
     return;
 }
 
-char* ti_get_in_s()
+char* ti_raed_in_s()
 {
     char* buffer = (char*)malloc(1);
     if(buffer != NULL)
@@ -55,7 +54,7 @@ char* ti_get_in_s()
     return buffer;
 }
 
-void ti_out_pf(char* frmt,...)
+void ti_print_out_s(char* frmt,...)
 {
     if(frmt == NULL)
         return;

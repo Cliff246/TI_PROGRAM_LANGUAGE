@@ -57,16 +57,11 @@ void ti_print_out_s(char* frmt,...)
 {
     if(frmt == NULL)
         return;
-    char *string= (char*)malloc(1);
-    int24_t svalue,buffer_size;
-    uint24_t uvalue;
-    double fvalue;
+    char *string = (char*)malloc(1);
+    int24_t string_size = 0;
 
     va_list va;
     va_start(va,frmt);
-
-    int24_t string_size = 1;
-
     for(uint16_t i = 0; ;i++)
     {
 
@@ -82,15 +77,19 @@ void ti_print_out_s(char* frmt,...)
             {
                 char next = frmt[i+1];
                 char *buffer = (char*)malloc(20);
+                int32_t svalue,buffer_size;
+                uint32_t uvalue;
+                double fvalue;
+
                 switch(next)
                 {
                     case 'd':
-                        svalue = va_arg(va,int24_t);
+                        svalue = va_arg(va,int32_t);
                         itoa_32(&buffer,(int32_t)svalue,10,0);
                         buffer_size = strlen(buffer);
                         string = (char*)allocate_more(string,string_size + buffer_size);
                         string_size += buffer_size;
-                        if(memcpy(string + i,buffer,buffer_size) == NULL)
+                        if(strcpy(string + string_size,buffer) == NULL)
                             os_ThrowError(-1);
                         break;
                     case 's':
@@ -99,17 +98,17 @@ void ti_print_out_s(char* frmt,...)
                         buffer_size = strlen(buffer);
                         string = (char*)allocate_more(string,string_size + buffer_size);
                         string_size += buffer_size;
-                        if(memcpy(string + i,buffer,buffer_size) == NULL)
+                        if(strcpy(string + string_size,buffer) == NULL)
                             os_ThrowError(-1);
 
                         break;
                     case 'p':
                         uvalue = va_arg(va,uint24_t);
-                        itoa_32(&buffer,(uint32_t)uvalue,10,0);
+                        itoa_32(&buffer,uvalue,10,0);
                         buffer_size = strlen(buffer);
                         string = (char*)allocate_more(string,string_size + buffer_size);
                         string_size += buffer_size;
-                        if(memcpy(string + i,buffer,buffer_size) == NULL)
+                        if(strcpy(string + string_size,buffer) == NULL)
                             os_ThrowError(-1);
                         break;  
                     case 'f':
@@ -118,12 +117,22 @@ void ti_print_out_s(char* frmt,...)
                         buffer_size = strlen(buffer);
                         string = (char*)allocate_more(string,string_size + buffer_size);
                         string_size += buffer_size;
-                        if(memcpy(string + i,buffer,buffer_size) == NULL)
+                        if(strcpy(string + string_size,buffer) == NULL)
+                            os_ThrowError(-1);
+                        break;
+                    case 'x':
+                        svalue = va_arg(va,int32_t);
+                        itoa_32(&buffer,svalue,16,0);
+                        buffer_size = strlen(buffer);
+                        string = (char*)allocate_more(string,string_size + buffer_size);
+                        string_size += buffer_size;
+                        if(strcpy(string + string_size,buffer) == NULL)
                             os_ThrowError(-1);
                         break;
                 }
                 free(buffer);
                 i++;
+                string_size++;
             }
             else
             {

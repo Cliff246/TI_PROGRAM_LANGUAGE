@@ -21,7 +21,7 @@ void reverse(char *buffer, uint16_t length)
     }
 }
 
-// Implementation of itoa()
+// Implementation of itoa
 int32_t itoa_32(char** buffer,int32_t num, uint8_t base,uint16_t rdecimal)
 {
 	int32_t i = 0;
@@ -45,16 +45,11 @@ int32_t itoa_32(char** buffer,int32_t num, uint8_t base,uint16_t rdecimal)
 		(*buffer)[i++] = (rem > 9)? (rem-10) + 'a' : rem + '0';
 		num /= base;
 	}
-
     while(i < rdecimal)
-    {
         (*buffer)[i++] = '0';
-    }
 
 	if(negative == true)
-    {
 		(*buffer)[i++] = '-';
-    }
     (*buffer)[i] = '\0'; 
 	reverse(*buffer, i);
 

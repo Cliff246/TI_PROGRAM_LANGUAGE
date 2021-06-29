@@ -2,7 +2,7 @@
 # Makefile Options
 # ----------------------------
 
-NAME ?= DEMO
+NAME ?= MyLang
 
 DESCRIPTION ?= "CE C Toolchain Demo"
 COMPRESSED ?= NO

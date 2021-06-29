@@ -1,5 +1,4 @@
-#ifndef _TITYPES_H
-#define _TITYPES_H
+#pragma once
 
 #define _UINT24_MAX 0xffffff
 #define _UINT24_C 8
@@ -11,5 +10,3 @@
 
 typedef unsigned int uint24_t;
 typedef int int24_t;
-
-#endif

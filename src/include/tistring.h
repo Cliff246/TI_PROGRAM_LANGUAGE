@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char compare_strings(char* key,char** string,uint8_t length)
+char compare_strings(char* key,char* string[],uint8_t length)
 {
     for(uint8_t i = 0; i < length;i++)
     {

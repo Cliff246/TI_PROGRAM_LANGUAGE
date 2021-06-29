@@ -49,6 +49,7 @@ ti_file_t* ti_open_file(char* file_name,char* file_mode)
 
 char* pull_file(ti_file_t* file)
 {
+    char* pmodes[4] = {"r","r+","w+","a+"};
     //free after words
    
     //pull data from file
@@ -58,7 +59,6 @@ char* pull_file(ti_file_t* file)
          every thing that could is in the scope of the goto is on the stack so it should be fine? 
          even if it did cause a memory leak then who cares its only a few bytes :)*/
         file_reset:
-        char* pmodes[] = {"r","r+","w+","a+"};
         if(compare_strings(file->ti_mode,pmodes,4) == 0)
         {
             uint16_t isize = ti_GetSize(file->ti_var_file);
@@ -100,12 +100,13 @@ char* pull_file(ti_file_t* file)
 
 void write_file(ti_file_t *file,char* data)
 {
+    char* pmode[5] = {"w","a","r+","w+","a+"};
     if(file == NULL || data == NULL)
         os_ThrowError(-1);
     else
     {
         file_reset:
-        char *pmode[] = {"w","a","r+","w+","a+"};
+     
         if(compare_strings(file->ti_mode,pmode,5) == 0)
         {
             uint16_t isize = ti_GetSize(file->ti_var_file);
@@ -202,6 +203,8 @@ ti_file_t* new_file(char* name,char* data)
     if(file != NULL)
     {
         create_file(&file,name,data);
+        if(file == NULL)
+            os_ThrowError(-1);
         return file;
     }
     os_ThrowError(-1);

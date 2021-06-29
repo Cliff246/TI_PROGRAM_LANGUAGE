@@ -64,24 +64,22 @@ void ti_print_out_s(char* frmt,...)
     va_start(va,frmt);
     for(uint16_t i = 0; ;i++)
     {
-
         if(frmt[i] == '\0')
         {
             string = (char*)allocate_more(string,string_size+1);
-            string[i+1] = 0;
+            string[string_size+1] = 0;
             break;
         }
         else
         {
             if(frmt[i] == '%')
             {
-                char next = frmt[i+1];
                 char *buffer = (char*)malloc(20);
                 int32_t svalue,buffer_size;
                 uint32_t uvalue;
                 double fvalue;
 
-                switch(next)
+                switch(frmt[i+1])
                 {
                     case 'd':
                         svalue = va_arg(va,int32_t);
@@ -132,14 +130,13 @@ void ti_print_out_s(char* frmt,...)
                 }
                 free(buffer);
                 i++;
-                string_size++;
             }
             else
             {
                 allocate_more(string,string_size+1);
-                string[i] = frmt[i];
-                string_size++;
+                string[string_size] = frmt[i];
             }
+            string_size++;
         }
     }
     os_PutStrFull(string);

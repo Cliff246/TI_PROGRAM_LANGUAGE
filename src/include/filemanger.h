@@ -59,7 +59,7 @@ char* pull_file(ti_file_t* file)
              every thing that could is in the scope of the goto is on the stack so it should be fine? 
              even if it did cause a memory leak then who cares its only a few bytes :)*/
             file_reset:
-            if(file->ti_mode == "r" || file->ti_mode == "r+" || file->ti_mode == "w+" || file->ti_mode == "a+")
+            if(strcmp(file->ti_mode,"r") == 0 || strcmp(file->ti_mode,"r+") == 0|| strcmp(file->ti_mode,"w+") == 0 || strcmp(file->ti_mode,"a+") == 0)
             {
                 uint16_t isize = ti_GetSize(file->ti_var_file);
 

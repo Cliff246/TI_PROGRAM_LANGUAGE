@@ -1,5 +1,5 @@
 
-NAME ?= DEMO
+NAME ?= Programing Interface
 
 COMPRESSED ?= YES
 ARCHIVED ?= NO

@@ -4,7 +4,7 @@
 
 NAME ?= MyLang
 
-DESCRIPTION ?= "CE C Toolchain Demo"
+DESCRIPTION ?= "Custom Programing Language"
 COMPRESSED ?= NO
 ARCHIVED ?= NO
 

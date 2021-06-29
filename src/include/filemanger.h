@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "tistring.h"
+#include "include/tistring.h"
 
 //you could adjust this but dont. dealing with character array is just easier.
 #define CHUNKSIZE 8

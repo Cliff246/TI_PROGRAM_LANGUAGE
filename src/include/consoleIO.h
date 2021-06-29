@@ -7,10 +7,10 @@
 #include <stdarg.h>
 
 
-#include "filemanger.h"
-#include "tistring.h"
-#include "memory.h"
-#include "convert&tools.h"
+#include "include/filemanger.h"
+#include "include/tistring.h"
+#include "include/memory.h"
+#include "include/convert&tools.h"
 
 void ti_get_in_d(char* data)
 {

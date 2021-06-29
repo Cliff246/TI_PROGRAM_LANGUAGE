@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <tice.h>
 
-#include "titypes.h"
+#include "include/titypes.h"
 
 
 void* allocate_more(void* rptr,int24_t size)

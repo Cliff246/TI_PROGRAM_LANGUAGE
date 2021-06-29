@@ -7,8 +7,8 @@
 #include <string.h>
 #include <math.h>
 
-#include "titypes.h"
-#include "tistring.h"
+#include "include/titypes.h"
+#include "include/tistring.h"
 
 /* A utility function to reverse a string */
 void reverse(char *buffer, uint16_t length)

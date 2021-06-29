@@ -8,7 +8,6 @@
 
 #include "include/titypes.h"
 
-
 /* A utility function to reverse a string */
 void reverse(char *buffer, uint16_t length)
 {
@@ -67,7 +66,6 @@ i dont know copy right law but this was taken from Anton Gusev (github)antongus
 https://github.com/antongus/stm32tpl/blob/master/ftoa.c
 I am really sorry dude 
 */
-
 
 //ftoa 
 char* ftoa_32(char* buffer,float num)

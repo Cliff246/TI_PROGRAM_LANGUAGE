@@ -1395,26 +1395,8 @@ BB13_20:
 	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -3
-	call	__frameset
-	ld	hl, 4
-	push	hl
-	call	_malloc
-	pop	de
-	ld	(ix + -3), hl
-	ld	hl, L_.str.6
-	push	hl
-	ld	hl, L_.str.7
-	push	hl
-	pea	ix + -3
-	call	_create_file
-	pop	hl
-	pop	hl
-	pop	hl
 	or	a, a
 	sbc	hl, hl
-	ld	sp, ix
-	pop	ix
 	ret
 	section	.text,"ax",@progbits
 
@@ -1464,16 +1446,6 @@ L___const.write_file.pmode:
 	dl	L_.str.1
 	dl	L_.str.2
 	dl	L_.str.3
-
-	section	.rodata,"a",@progbits
-	private	L_.str.6
-L_.str.6:
-	db	"what",000o
-
-	section	.rodata,"a",@progbits
-	private	L_.str.7
-L_.str.7:
-	db	"hello",000o
 
 	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
 	extern	__ldivs

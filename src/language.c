@@ -3,9 +3,7 @@
 
 int main()
 {
-
-    ti_file_t *file = (ti_file_t*)malloc(sizeof(ti_file_t)); 
-    char* data = "what";
-    create_file(&file,"hello",data);
+    ti_file_t *file = new_file("hello",NULL);
+    
     return 0;
 }

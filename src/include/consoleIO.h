@@ -128,7 +128,6 @@ void ti_print_out_s(char* frmt,...)
             }
         }
     }
-
     os_PutStrFull(string);
 }
 

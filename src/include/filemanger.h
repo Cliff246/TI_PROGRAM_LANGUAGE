@@ -38,7 +38,7 @@ ti_file_t* ti_open_file(char* file_name,char* file_mode)
         
         void* mode_cpy = memcpy(file_object->ti_mode,file_mode,3);
         void* name_cpy = memcpy(file_object->ti_file_name,file_name,size_name);
-        
+
         if(mode_cpy == NULL || name_cpy == NULL)
             os_ThrowError(-1);
         return file_object;
@@ -141,7 +141,6 @@ void write_file(ti_file_t *file,char* data)
                 }
         }
     }
-
 }
 
 void create_file(ti_file_t **rfile,char* name,char* data)
@@ -198,7 +197,6 @@ ti_file_t* new_file(char* name,char* data)
 {
     if(name == NULL || data == NULL)
         return NULL;
-
     ti_file_t* file = (ti_file_t*)malloc(sizeof(ti_file_t)); 
     if(file != NULL)
     {

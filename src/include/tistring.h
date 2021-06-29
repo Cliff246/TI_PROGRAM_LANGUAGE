@@ -13,5 +13,4 @@ char compare_strings(char* key,char* string[],uint8_t length)
             return cmp;
     }
     return 0;
-
 }

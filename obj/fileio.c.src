@@ -3,7 +3,7 @@
 	section	.text,"ax",@progbits
 	public	_new_file
 _new_file:
-	ld	hl, -4
+	ld	hl, -3
 	call	__frameset
 	ld	hl, (ix + 6)
 	add	hl, bc
@@ -14,7 +14,7 @@ _new_file:
 	push	de
 	push	hl
 	call	_ti_Open
-	ld	(ix + -4), a
+	ld	(ix + -3), a
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 6)
@@ -26,32 +26,25 @@ _new_file:
 	add	hl, de
 	push	hl
 	call	_malloc
-	pop	bc
-	ld	a, (ix + -4)
-	ld	c, a
+	ld	c, (ix + -3)
+	ld	de, (ix + 6)
+	push	hl
+	pop	iy
+	pop	hl
+	ld	a, c
 	or	a, a
 	jq	z, BB0_4
+	lea	hl, iy + 0
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jq	z, BB0_4
-	ld	(hl), c
-	push	hl
-	pop	iy
+	ld.sis	hl, 119
+	ld	(iy), c
+	ld	(iy + 1), l
+	ld	(iy + 2), h
+	push	de
 	ld	(ix + -3), iy
-	inc	iy
-	ld	hl, 3
-	push	hl
-	ld	hl, L_.str
-	push	hl
-	push	iy
-	call	_memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix + 6)
-	push	hl
-	ld	iy, (ix + -3)
 	pea	iy + 4
 	call	_strcpy
 	pop	hl
@@ -143,7 +136,8 @@ BB1_5:
 	section	.text,"ax",@progbits
 	public	_close_file
 _close_file:
-	call	__frameset0
+	ld	hl, -3
+	call	__frameset
 	ld	hl, (ix + 6)
 	add	hl, bc
 	or	a, a
@@ -152,13 +146,129 @@ _close_file:
 	ld	a, (hl)
 	ld	e, a
 	push	de
+	ld	(ix + -3), hl
 	call	_ti_Close
 	pop	hl
-	ld	hl, (ix + 6)
+	ld	hl, (ix + -3)
 	push	hl
 	call	_free
 	pop	hl
 BB2_2:
+	ld	hl, -1
+	ld	(ix + 6), hl
+	pop	hl
+	pop	ix
+	jp	_os_ThrowError
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_read_file
+_read_file:
+	ld	hl, -15
+	call	__frameset
+	ld	hl, (ix + 6)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	de, -1
+	jq	z, BB3_8
+	ld	iy, L___const.read_file.mallowed
+	ld	de, 12
+	lea	bc, ix + -12
+	ld	(ix + -15), bc
+	push	de
+	push	iy
+	push	bc
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	inc	hl
+	ld	de, 4
+	push	de
+	ld	de, (ix + -15)
+	push	de
+	push	hl
+	call	_contain_string
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	l, 1
+	xor	a, l
+	bit	0, a
+	jq	nz, BB3_10
+	ld	e, (ix + 9)
+	ld	d, (ix + 10)
+	or	a, a
+	sbc	hl, hl
+	ld	l, e
+	ld	h, d
+	ld	(ix + -15), hl
+	ld	hl, (ix + 6)
+	ld	a, (hl)
+	ld	l, a
+	push	hl
+	call	_ti_GetSize
+	pop	de
+	ld	e, (ix + 9)
+	ld	d, (ix + 10)
+	or	a, a
+	sbc.sis	hl, de
+	ld	hl, -1
+	push	hl
+	call	c, _os_ThrowError
+	pop	hl
+	ld	hl, (ix + -15)
+	push	hl
+	call	_malloc
+	push	hl
+	pop	de
+	pop	hl
+	push	de
+	pop	hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jq	nz, BB3_5
+	ld	de, -1
+BB3_8:
+	push	de
+	call	_os_ThrowError
+	pop	hl
+	ld	hl, 0
+	jq	BB3_9
+BB3_10:
+	ld	hl, 0
+	jq	BB3_6
+BB3_5:
+	ld	hl, (ix + 6)
+	ld	a, (hl)
+	ld	l, a
+	push	hl
+	ld	hl, (ix + -15)
+	push	hl
+	ld	hl, 8
+	push	hl
+	push	de
+	ld	(ix + -15), de
+	call	_ti_Read
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + -15)
+BB3_6:
+BB3_9:
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_write_file
+_write_file:
+	call	__frameset0
 	pop	ix
 	ret
 	section	.text,"ax",@progbits
@@ -166,12 +276,35 @@ BB2_2:
 	section	.rodata,"a",@progbits
 	private	L_.str
 L_.str:
-	db	"w+",000o
+	db	"w",000o
 
 	section	.rodata,"a",@progbits
 	private	L_.str.1
 L_.str.1:
 	db	"r+",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.2
+L_.str.2:
+	db	"r",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.3
+L_.str.3:
+	db	"w+",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.4
+L_.str.4:
+	db	"a+",000o
+
+	section	.rodata,"a",@progbits
+	private	L___const.read_file.mallowed
+L___const.read_file.mallowed:
+	dl	L_.str.2
+	dl	L_.str.1
+	dl	L_.str.3
+	dl	L_.str.4
 
 	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
 	extern	_os_ThrowError
@@ -181,8 +314,11 @@ L_.str.1:
 	extern	_malloc
 	extern	_strcpy
 	extern	_ti_Open
+	extern	_ti_GetSize
 	extern	_ti_Close
 	extern	_free
+	extern	_contain_string
 	extern	__frameset0
 	extern	_memcpy
 	extern	_strlen
+	extern	_ti_Read
